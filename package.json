@@ -1,0 +1,67 @@
+{
+  "name": "dualcube-ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "style": "dist/index.css",
+  "scripts": {
+    "build": "wireit",
+    "dev": "wireit",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "wireit": {
+    "build": {
+      "command": "rollup -c",
+      "files": [
+        "src/**/*",
+        "rollup.config.js",
+        "tsconfig.json"
+      ],
+      "output": [
+        "dist/"
+      ]
+    },
+    "dev": {
+      "command": "vite",
+      "dependencies": [
+        "build"
+      ]
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@types/estree": "^1.0.7",
+    "@types/react": ">=19.0.0",
+    "@types/react-dom": ">=19.0.0",
+    "@types/resolve": "^1.20.6",
+    "rollup": "^4.37.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "sass": "^1.86.0",
+    "tslib": "^2.8.1",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.3",
+    "wireit": "^0.14.11"
+  },
+  "peerDependencies": {
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
+  },
+  "dependencies": {
+    "@lexical/headless": "^0.29.0",
+    "@lexical/markdown": "^0.29.0",
+    "@lexical/react": "^0.29.0",
+    "@lexical/rich-text": "^0.29.0",
+    "@wordpress/i18n": "^5.20.0"
+  }
+}

@@ -1,0 +1,32 @@
+.toolbar {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #ccc;
+    border-radius: 5px 5px 0 0;
+  
+    button {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.2s ease-in-out;
+  
+      &:hover {
+        background: #e0e0e0;
+      }
+  
+      &:active {
+        background: #d6d6d6;
+      }
+  
+      &.active {
+        background: #007bff;
+        color: white;
+        border-color: #007bff;
+      }
+    }
+  }
+  
