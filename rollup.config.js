@@ -2,6 +2,7 @@ const resolve = require("@rollup/plugin-node-resolve");
 const commonjs = require("@rollup/plugin-commonjs");
 const typescript = require("@rollup/plugin-typescript");
 const postcss = require("rollup-plugin-postcss");
+const sass = require("sass");
 const peerDepsExternal = require("rollup-plugin-peer-deps-external");
 const json = require("@rollup/plugin-json");
 
@@ -31,7 +32,8 @@ module.exports = {
       postcss({
         inject: true,
         minimize: true,
-        use: ["sass"]
+        extensions: [".scss", ".sass"],
+        implementation: sass,
       })
     ],
 

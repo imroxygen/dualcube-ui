@@ -1,6 +1,7 @@
 /**
  * Core static JSON service module.
  */
+/// <reference types="webpack-env" />
 
 // Declare require.context for TypeScript
 declare const require: {
@@ -57,8 +58,8 @@ const getTemplateData = (): FileStructure[] => {
     return importAll(context);
 };
 
-const getModuleData = async (): Promise<any> => {
-    const module = await import('../template/modules/index');
+const getModuleData = async (filepath:string): Promise<any> => {
+    const module = await import(filepath);
     return module;
 };
 
