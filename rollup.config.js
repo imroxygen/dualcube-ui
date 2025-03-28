@@ -11,10 +11,14 @@ module.exports = {
       {
         file: "dist/index.js",
         format: "esm",
-        sourcemap: true
+        sourcemap: true,
+        generatedCode: {
+          preserveThis: true, // Prevents Rollup from rewriting this to undefined
+        },
       }
     ],
-    external: ["react", "react-dom"],
+    context: "this",
+    external: ["react", "react-dom", "react-router-dom"],
     plugins: [
       json(),
       peerDepsExternal(),
@@ -29,5 +33,5 @@ module.exports = {
         minimize: true,
         use: ["sass"]
       })
-    ]
+    ],
   };

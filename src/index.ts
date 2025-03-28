@@ -18,3 +18,7 @@ export { default as MapsInput } from "./components/MapsInput/MapsInput";
 export { default as MergeComponents } from "./components/MergeComponent/MergeComponent";
 export { default as MultiCheckbox } from "./components/MultiCheckbox/MultiCheckbox";
 export { default as ToggleSetting } from "./components/ToggleSetting/ToggleSetting";
+export { default as IconList } from "./components/IconList/IconList";
+// export { default as Tabs, TabData} from "./components/Tabs/Tabs";
+export { default as Propopup } from "./components/PopupContent/Propopup";
+export { default as ModulePopup } from "./components/PopupContent/ModulePopup";
