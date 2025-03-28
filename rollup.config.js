@@ -34,4 +34,11 @@ module.exports = {
         use: ["sass"]
       })
     ],
+
+    onwarn(warning, warn) {
+      if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+          return;  // Ignore "use client" warnings
+      }
+      warn(warning);  // Log other warnings normally
+    }
   };
