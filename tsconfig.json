@@ -11,13 +11,11 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "strict": true,                        /* Skip type checking all .d.ts files. */
-    "lib": ["es6", "dom"],
+    "lib": ["es6", "dom", "esnext"],
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
-    "allowSyntheticDefaultImports": true
-    "lib": ["dom", "esnext"],
-    "strict": true                             /* Skip type checking all .d.ts files. */
+    "allowSyntheticDefaultImports": true                   /* Skip type checking all .d.ts files. */
   },
   "include": ["src","src/types"],
   "exclude": ["node_modules", "dist"]

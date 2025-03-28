@@ -48,3 +48,4 @@ export { default as SubTabSection } from "./components/SubTabSection/SubTabSecti
 export { default as SyncMap } from "./components/SyncMap/SyncMap";
 export { default as SyncNow } from "./components/SyncNow/SyncNow";
 export { default as TextArea } from "./components/TextArea/TextArea";
+export { default as Banner } from "./components/Banner/Banner";
