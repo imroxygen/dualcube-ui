@@ -42,13 +42,15 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
+    "@types/axios": "^0.14.4",
     "@types/estree": "^1.0.7",
     "@types/mapbox__mapbox-gl-geocoder": "^5.0.0",
     "@types/mapbox-gl": "^3.4.1",
-    "@types/react": ">=19.0.0",
+    "@types/react": "^19.0.12",
     "@types/react-dom": ">=19.0.0",
     "@types/react-modal": "^3.16.3",
     "@types/resolve": "^1.20.6",
+    "@types/wordpress__i18n": "^3.11.0",
     "rollup": "^4.37.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
@@ -76,9 +78,13 @@
     "@lexical/react": "^0.29.0",
     "@lexical/rich-text": "^0.29.0",
     "@mapbox/mapbox-gl-geocoder": "^5.0.3",
-    "@wordpress/i18n": "^5.20.0",
+    "@wordpress/i18n": "^5.21.0",
+    "axios": "^1.8.4",
     "mapbox-gl": "^3.10.0",
+    "react-draggable": "^4.4.6",
     "react-modal": "^3.16.3",
-    "react-multi-date-picker": "^4.5.2"
+    "react-multi-date-picker": "^4.5.2",
+    "react-select": "^5.10.1",
+    "react-sortablejs": "^6.1.4"
   }
 }
