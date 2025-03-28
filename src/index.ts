@@ -18,3 +18,6 @@ export { default as MapsInput } from "./components/MapsInput/MapsInput";
 export { default as MergeComponents } from "./components/MergeComponent/MergeComponent";
 export { default as MultiCheckbox } from "./components/MultiCheckbox/MultiCheckbox";
 export { default as ToggleSetting } from "./components/ToggleSetting/ToggleSetting";
+export { default as MultiCheckboxTable } from "./components/MultiCheckboxTable/MultiCheckboxTable";
+export { default as MultiNumInput } from "./components/MultiNumInput/MultiNumInput";
+export { default as RadioInput } from "./components/RadioInput/RadioInput";
