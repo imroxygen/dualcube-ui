@@ -10,7 +10,7 @@ interface Products{
 }
 interface BannerProps {
     is_pro: boolean;
-    products : Products[];
+    products ?: Products[];
 }
 
 const Banner: React.FC<BannerProps> = ({
@@ -117,7 +117,7 @@ const Banner: React.FC<BannerProps> = ({
                                 <div className="admin-font adminLib-cross pro-slider-cross" onClick={handleCloseBanner}></div>
                                 <div className="why-go-pro-tag" onClick={handleOpen}>Why Premium</div>
                                 <ul className="carousel-list">
-                                     {products.map((product,i)=>{
+                                     {products?.map((product,i)=>{
                                         return (
                                             <li key={i} className={`carousel-item ${i==0?'active':''}`}>
                                                 <div className="admin-pro-txt-items">

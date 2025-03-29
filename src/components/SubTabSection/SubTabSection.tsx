@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './SubTabSection.scss';
 
-interface MenuItem {
+export interface MenuItem {
     id: string;
     name: string;
     icon: string;

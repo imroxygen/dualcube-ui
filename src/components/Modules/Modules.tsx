@@ -22,9 +22,13 @@ interface AppLocalizer {
 
 declare const appLocalizer: AppLocalizer;
 
-const Modules = async () => {
+interface moduleProps{
+  filePath:string,
+}
+
+const Modules : React.FC<moduleProps> = async ({filePath}) => {
   const { modules, insertModule, removeModule } = useModules();
-  const modulesArray: Module[] = await getModuleData("#"); //needs path of file
+  const modulesArray: Module[] = await getModuleData(filePath); //needs path of file
   const [modelOpen, setModelOpen] = useState<boolean>(false);
   const [successMsg, setSuccessMsg] = useState<string>("");
 
