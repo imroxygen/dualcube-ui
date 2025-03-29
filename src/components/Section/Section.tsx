@@ -2,7 +2,7 @@ import React from "react";
 
 export interface SectionProps{
     wrapperClass : string,
-    hint : string,
+    hint ?: string,
     value : string,
 }
 

@@ -22,8 +22,8 @@ interface TabsProps {
   currentTab: string;
   getForm: (tabId: string) => ReactNode;
   prepareUrl: (tabId: string) => string;
-  HeaderSection?: FC;
-  BannerSection?: FC;
+  HeaderSection?: React.FC;
+  BannerSection?: React.FC;
   horizontally?: boolean;
   brandImageUrl:string;
   brandImageSmallUrl:string;

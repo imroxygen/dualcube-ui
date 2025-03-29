@@ -58,9 +58,8 @@ const getTemplateData = (): FileStructure[] => {
     return importAll(context);
 };
 
-const getModuleData = async (filepath:string): Promise<any> => {
-    const module = await import(filepath);
-    return module;
+const getModuleData = async (filepath: string): Promise<any> => {
+    return await import(/* @vite-ignore */ filepath);
 };
 
 export { getTemplateData, getModuleData };
