@@ -3,7 +3,7 @@ import "./InputMailchimpList.scss";
 import { useSetting } from "../Context/SettingContext";
 import { getApiLink, getApiResponse } from "../Service/apiService";
 import BasicInput from "../BasicInput/BasicInput";
-import SelectInput from "../SelectInput/SelectInput";
+import SelectInput, { SelectOptions } from "../SelectInput/SelectInput";
 
 // Define types for API response and component props
 interface SelectOption {

@@ -1,13 +1,14 @@
 import React, { ChangeEvent, MouseEvent, FocusEvent } from "react";
 
 export interface TextAreaProps {
-    wrapperClass?: string;
-    inputClass?: string;
     id?: string;
+    key:string,
     name?: string;
     value?: string | number;
     maxLength?: number;
     placeholder?: string;
+    wrapperClass?: string;
+    inputClass?: string;
     rowNumber?: number;
     colNumber?: number;
     proSetting?: boolean;
@@ -24,6 +25,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
     wrapperClass,
     inputClass,
     id,
+    key,
     name,
     value,
     maxLength,
@@ -44,6 +46,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
             <textarea
                 className={inputClass}
                 id={id}
+                key={key}
                 name={name}
                 value={value}
                 maxLength={maxLength}

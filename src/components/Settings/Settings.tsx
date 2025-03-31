@@ -4,18 +4,28 @@ import Support from "../Support/Support";
 
 import { useState, useEffect } from "react";
 import { SettingProvider, useSetting } from "../Context/SettingContext";
-import { getTemplateData } from "../Service/templateService";
+import { getTemplateData} from "../Service/templateService";
 import AdminForm, { SettingsType } from "../AdminForm/AdminForm";
 import Tabs from "../Tabs/Tabs";
 import BannerSection from "../Banner/Banner";
 import { getAvialableSettings, getSettingById } from "../../util/settingUtil";
 
+interface SettingsProps{
+  folderPath:string,
+}
 
-
-const Settings: React.FC = () => {
+const Settings: React.FC<SettingsProps> = () => {
   // Get all settings
-  const settingsArray = getAvialableSettings(getTemplateData(), []);
+  const [settingsArray, setSettingsArray] = useState<any>([]);
 
+  useEffect(() => {
+    const fetchSettingsData = async () => {
+        const templateData = await getTemplateData();
+        setSettingsArray(getAvialableSettings(templateData, []));
+    };
+
+    fetchSettingsData();
+}, []);
   // Get current browser location
   const location = new URLSearchParams(useLocation().hash);
   const currentTab = location.get("subtab") || "";

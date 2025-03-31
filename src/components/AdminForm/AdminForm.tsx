@@ -1,6 +1,6 @@
 import React, { JSX, useEffect, useRef, useState } from "react";
-import { SingleValue } from "react-select";
-import SelectInput from "../SelectInput/SelectInput";
+import { ActionMeta, MultiValue, SingleValue } from "react-select";
+import SelectInput, { SelectOptions } from "../SelectInput/SelectInput";
 import Label from "../Label/Label";
 import Section from "../Section/Section";
 import BlockText from "../BlockText/BlockText";
@@ -377,6 +377,20 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
         }
     };
 
+    const onSelectChange = (newValue: SingleValue<SelectOptions> | MultiValue<SelectOptions>, actionMeta: ActionMeta<SelectOptions>) => {
+        settingChanged.current = true;
+        if (Array.isArray(newValue)) {
+            // Multi-select case
+            const values = newValue.map((val)=>val.value);
+            updateSetting( actionMeta.name as string, values);
+        } else if (newValue !== null && "value" in newValue) {
+            // Single-select case (ensures 'newValue' is an object with 'value')
+            updateSetting( actionMeta.name as string, newValue.value );
+        } else {
+            console.log("Selection cleared.");
+        }
+    };
+
     const handleMultiNumberChange = (
         e: React.ChangeEvent<HTMLInputElement>,
         key?: string,
@@ -405,15 +419,11 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
         type: string = ""
     ) => {
         settingChanged.current = true;
-
         if (Array.isArray(setting[key]) && setting[key].length > 0) {
-            updateSetting(key, []);
+        updateSetting(key, []);
         } else {
-            const newValue = options
-                .filter((option) => type === "multi-select" || !isProSetting(option.proSetting ?? false))
-                .map(({ value }) => value);
-
-            updateSetting(key, newValue);
+        const values = options.map((val)=>val.value);
+        updateSetting(key, values);
         }
     };
 
@@ -480,7 +490,7 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
 
     const renderForm = () => {
         return modal.map((inputField: InputField, index: number) => {
-            let value: string | number = setting[inputField.key] ?? "";
+            let value: any = setting[inputField.key] ?? "";
             let input: JSX.Element | null = null;
 
             // Filter dependent conditions
@@ -766,17 +776,13 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
                         <SelectInput
                             wrapperClass="form-select-field-wrapper"
                             descClass="settings-metabox-description"
+                            name={inputField.name}
                             description={inputField.desc}
                             inputClass={inputField.key}
                             options={Array.isArray(value) ? value : []}
                             value={typeof value === "number" ? value.toString() : value}
                             proSetting={isProSetting(inputField.proSetting ?? false)}
-                            onChange={(data) => {
-                                if (!proSettingChanged(inputField.proSetting ?? false) && !moduleEnabledChanged(String(inputField.moduleEnabled))) {
-                                    settingChanged.current = true;
-                                    updateSetting(inputField.key, (data as SingleValue<SelectOption>)?.value);
-                                }
-                            }}
+                            onChange={onSelectChange}
                         />
                     );
                     break;
@@ -786,6 +792,7 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
                 case "multi-select":
                     input = (
                         <SelectInput
+                            name={inputField.name}
                             wrapperClass="settings-from-multi-select"
                             descClass="settings-metabox-description"
                             selectDeselectClass="btn-purple select-deselect-trigger"
@@ -797,12 +804,7 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
                             type="multi-select"
                             value={typeof value === "number" ? value.toString() : value}
                             proSetting={isProSetting(inputField.proSetting ?? false)}
-                            onChange={(selectedOption, actionMeta) => {
-                                if (!proSettingChanged(inputField.proSetting ?? false) && !moduleEnabledChanged(String(inputField.moduleEnabled))) {
-                                    handleChange(selectedOption, inputField.key, "single", "multi-select", Array.isArray(selectedOption) ? selectedOption : []);
-                                }
-                            }}
-
+                            onChange={onSelectChange}
                             onMultiSelectDeselectChange={(e) =>
                                 handlMultiSelectDeselectChange(
                                     inputField.key,
@@ -817,6 +819,7 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
                 case "country":
                     input = (
                         <SelectInput
+                            name={inputField.name}
                             wrapperClass="country-choice-class"
                             descClass="settings-metabox-description"
                             description={inputField.desc}
@@ -841,6 +844,7 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
                 case "state":
                     input = (
                         <SelectInput
+                            name={inputField.name}
                             wrapperClass="state-choice-class"
                             descClass="settings-metabox-description"
                             description={inputField.desc}
@@ -1029,6 +1033,7 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
                         <FormCustomizer
                             value={String(value)}
                             buttonText={setting.customize_btn && setting.customize_btn.button_text || 'Submit'}
+                            setting={setting[inputField.key]}
                             proSetting={isProSetting(inputField.proSetting ?? false)}
                             onChange={(e, key) => {
                                 if (!proSettingChanged(inputField.proSetting ?? false)) {
