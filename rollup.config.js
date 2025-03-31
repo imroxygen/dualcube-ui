@@ -32,7 +32,7 @@ module.exports = {
       postcss({
         inject: true,
         minimize: true,
-        extensions: [".scss", ".sass"],
+        extensions: [".scss", ".sass", ".css"],
         implementation: sass,
       })
     ],

@@ -3,7 +3,7 @@ import React from "react";
 export interface LabelProps {
     wrapperClass : string,
     descClass : string,
-    description : string,
+    description ?: string,
     value : string
 }
 
