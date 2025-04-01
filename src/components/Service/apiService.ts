@@ -26,6 +26,7 @@ export const getApiResponse = async <T>(url: string, headers: AxiosRequestConfig
  * @returns API response data or null in case of an error
  */
 export const sendApiResponse = async <T>(
+    appLocalizer: Record<string, any>,
     url: string,
     data: unknown,
     headers: AxiosRequestConfig = {}
@@ -53,6 +54,6 @@ export const sendApiResponse = async <T>(
  * @param rootUrl - API root URL (optional)
  * @returns Complete API URL
  */
-export const getApiLink = (endpoint: string, namespace?: string, rootUrl?: string): string => {
+export const getApiLink = ( appLocalizer: Record<string, any>, endpoint: string, namespace?: string, rootUrl?: string): string => {
     return `${rootUrl || appLocalizer.apiurl}/${namespace || appLocalizer.restUrl}/${endpoint}`;
 };

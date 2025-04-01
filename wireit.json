@@ -1,15 +1,14 @@
 {
-    "$schema": "https://wireit.dev/schema.json",
-    "scripts": {
-      "build": {
-        "command": "rollup -c",
-        "files": ["src/**/*", "rollup.config.js", "tsconfig.json"],
-        "output": ["dist/"]
-      },
-      "dev": {
-        "command": "vite",
-        "dependencies": ["build"]
-      }
+  "$schema": "https://wireit.dev/schema.json",
+  "scripts": {
+    "build": {
+      "command": "rollup -c",
+      "files": ["src/**/*", "rollup.config.js", "tsconfig.json"],
+      "output": ["dist/"]
+    },
+    "dev": {
+      "command": "vite",
+      "dependencies": ["build"]
     }
   }
-  
+}

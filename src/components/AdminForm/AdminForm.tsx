@@ -1,4 +1,5 @@
 import React, { JSX, useEffect, useRef, useState } from "react";
+import "./AdminForm.scss";
 import { ActionMeta, MultiValue, SingleValue } from "react-select";
 import SelectInput, { SelectOptions } from "../SelectInput/SelectInput";
 import Label from "../Label/Label";
@@ -16,8 +17,8 @@ import SyncMap from "../SyncMap/SyncMap";
 import ToggleSetting from "../ToggleSetting/ToggleSetting";
 import ConnectButton from "../ConnectButton/ConnectButton";
 import { Dialog } from "@mui/material";
-import { useSetting } from "../Context/SettingContext";
-import { useModules } from "../Context/ModuleContext";
+// import { useSetting } from "../Context/SettingContext";
+// import { useModules } from "../Context/ModuleContext";
 import { getApiLink, sendApiResponse } from "../Service/apiService";
 import BasicInput from "../BasicInput/BasicInput";
 import TextArea from "../TextArea/TextArea";
@@ -33,23 +34,6 @@ import CheckboxCustomImg from "../CheckboxCustomImg/CheckboxCustomImg";
 import InputMailchimpList from "../InputMailchimpList/InputMailchimpList";
 import ProPopup from "../PopupContent/Propopup";
 import ModulePopup from "../PopupContent/ModulePopup";
-
-
-interface Window {
-    appLocalizer?: {
-        khali_dabba: boolean;
-        countries?: string;
-        open_uploader?: string;
-        default_logo?: string;
-        mvx_tinymce_key?: string;
-    };
-}
-
-const appWindow:Window={
-    appLocalizer:{
-        khali_dabba:false,
-    }
-}
 
 declare const wp: any;
 
@@ -120,7 +104,7 @@ interface InputField {
     | "catalog-customizer" | "multi-checkbox-table" |
     "mergeComponent" | "shortCode-table" | "syncbutton" |
     "sync-map" | "sso-key" | "testconnection" | "log" |
-    "checkbox-custom-img"|"api-connect" |"from-builder";
+    "checkbox-custom-img" | "api-connect" | "from-builder";
     desc?: string;
     placeholder?: string;
     inputLabel?: string;
@@ -170,7 +154,7 @@ interface InputField {
     }[];
     optionKey?: string;
     selectKey?: string;
-    label?:string;
+    label?: string;
     classes?: string;
 }
 
@@ -178,7 +162,7 @@ export interface SelectOption {
     value: string;
     label: string;
 }
-export interface SettingsType{
+export interface SettingsType {
     modal: InputField[];
     submitUrl: string;
     id: string;
@@ -189,15 +173,20 @@ interface AdminFormProps {
     announcementId?: string;
     knowladgebaseId?: string;
     proSetting: SettingsType;
+    setting: any;
+    updateSetting: any;
+    modules: any;
+    appLocalizer: Record<string, any>; // Allows any structure
 }
-const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementId, knowladgebaseId }) => {
+
+const AdminForm: React.FC<AdminFormProps> = ({ setting, updateSetting, modules, appLocalizer, settings, vendorId, announcementId, knowladgebaseId }) => {
     const { modal, submitUrl, id } = settings;
     const settingChanged = useRef<boolean>(false);
     const counter = useRef<number>(0);
     const counterId = useRef<NodeJS.Timeout | number>(0);
     const [successMsg, setSuccessMsg] = useState<string>("");
     const [modelOpen, setModelOpen] = useState<boolean>(false);
-    const { setting, updateSetting } = useSetting();
+    // const { setting, updateSetting } = useSetting();
     const [modelModuleOpen, setModelModuleOpen] = useState<boolean>(false);
     const [countryState, setCountryState] = useState<CountryState[]>([]);
 
@@ -207,7 +196,7 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
         settings: '',
         plugin: '',
     });
-    const { modules } = useModules();
+    // const { modules } = useModules();
 
     useEffect(() => {
         if (settingChanged.current) {
@@ -225,28 +214,24 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
             const intervalId = setInterval(() => {
                 counter.current -= COOLDOWN;
 
-                // Cooldown complete time for DB request
+                // Cooldown complete, time for DB request
                 if (counter.current < 0) {
-                    sendApiResponse(getApiLink(submitUrl), {
+                    sendApiResponse(appLocalizer, getApiLink(appLocalizer, submitUrl), {
+                        setting,
                         settingName: id,
                         vendor_id: vendorId || "",
                         announcement_id: announcementId || "",
                         knowladgebase_id: knowladgebaseId || "",
-                    })
-                        .then((response) => response as ApiResponse)
-                        .then((response: ApiResponse) => {
-                            // Set success message for 2 seconds
-                            setSuccessMsg(response.error);
-                            setTimeout(() => setSuccessMsg(""), 2000);
+                    }).then((response: any) => {
+                        // Set success message for 2 seconds
+                        setSuccessMsg(response.error);
+                        setTimeout(() => setSuccessMsg(""), 2000);
 
-                            // If response has redirect link then redirect
-                            if (response.redirect_link) {
-                                window.location.href = response.redirect_link;
-                            }
-                        })
-                        .catch((error) => {
-                            console.error("API Error:", error);
-                        });
+                        // Redirect if the response has a redirect link
+                        if (response.redirect_link) {
+                            window.location.href = response.redirect_link;
+                        }
+                    });
 
                     clearInterval(intervalId);
                     counterId.current = 0;
@@ -256,13 +241,14 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
             // Store the interval ID
             counterId.current = intervalId;
         }
-    }, [submitUrl, id, vendorId, announcementId, knowladgebaseId]);
+    }, [setting]);
+
 
     const isProSetting = (proDependent: boolean): boolean => {
-        return proDependent && !appWindow.appLocalizer?.khali_dabba;
+        return proDependent && !appLocalizer?.khali_dabba;
     };
     const proSettingChanged = (isProSetting: boolean): boolean => {
-        if (isProSetting && !appWindow.appLocalizer?.khali_dabba) {
+        if (isProSetting && !appLocalizer?.khali_dabba) {
             setModelOpen(true);
             return true;
         }
@@ -308,86 +294,65 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
     const handleChange = (
         event: any,
         key: string,
-        type: "single" | "multiple" = "single",
-        fromType: "simple" | "calender" | "select" | "multi-select" | "wpeditor" | "country" = "simple",
+        type: 'single' | 'multiple' = 'single',
+        fromType: 'simple' | 'calender' | 'select' | 'multi-select' | 'wpeditor' | 'country' = 'simple',
         arrayValue: any[] = []
-    ): void => {
+    ) => {
         settingChanged.current = true;
 
-        if (type === "single") {
-            if (fromType === "simple") {
+        if (type === 'single') {
+            if (fromType === 'simple') {
                 updateSetting(key, event.target.value);
-            } else if (fromType === "calender") {
+            } else if (fromType === 'calender') {
                 let formattedDate: string;
 
                 if (Array.isArray(event)) {
-                    // Check if all elements are ranges
+                    // Check if all elements are date ranges (start and end)
                     if (event.every((item) => Array.isArray(item) && item.length === 2)) {
-                        // Handle one or multiple ranges
                         formattedDate = event
                             .map((range) => {
                                 const startDate = range[0]?.toString();
                                 const endDate = range[1]?.toString();
                                 return `${startDate} - ${endDate}`;
                             })
-                            .join(", ");
+                            .join(', ');
                     } else {
-                        formattedDate = event.map((item) => item.toString()).join(",");
+                        formattedDate = event.map((item) => item.toString()).join(','); // Multiple dates format
                     }
                 } else {
                     formattedDate = event.toString();
                 }
 
                 updateSetting(key, formattedDate);
-            } else if (fromType === "select") {
-                updateSetting(key, arrayValue.find((item) => item.value === event.target.value) || "");
-            } else if (fromType === "multi-select") {
+            } else if (fromType === 'select') {
+                updateSetting(key, arrayValue[event.index]);
+            } else if (fromType === 'multi-select' || fromType === 'wpeditor') {
                 updateSetting(key, event);
-            } else if (fromType === "wpeditor") {
-                updateSetting(key, event);
-            } else if (fromType === "country") {
-                updateSetting(key, arrayValue.find((item) => item.value === event.target.value) || "");
+            } else if (fromType === 'country') {
+                updateSetting(key, arrayValue[event.index]);
 
-                const countryData = appWindow.appLocalizer?.countries
-                    ? JSON.parse(appWindow.appLocalizer.countries.replace(/&quot;/g, '"'))
-                    : {};
+                const countryData: Record<string, string> = JSON.parse(
+                    appLocalizer.countries.replace(/&quot;/g, '"')
+                )[event.value];
 
-                const stateList = countryData[event.target.value] || {};
-                const countryListArray = Object.keys(stateList).map((key_country) => ({
+                const countryListArray = Object.keys(countryData).map((key_country) => ({
                     label: key_country,
-                    value: stateList[key_country],
+                    value: countryData[key_country],
                 }));
 
                 setCountryState(countryListArray);
             }
         } else {
-            let prevData: any[] = Array.isArray(setting[key]) ? setting[key] : [];
-
-            if (!prevData.length || typeof prevData === "string" || prevData === null || typeof prevData === "boolean") {
-                prevData = [key];
+            let prevData: string[] = setting[key] || [];
+            if (!Array.isArray(prevData)) {
+                prevData = [String(prevData)];
             }
 
             prevData = prevData.filter((data) => data !== event.target.value);
-
             if (event.target.checked) {
                 prevData.push(event.target.value);
             }
-
             updateSetting(key, prevData);
-        }
-    };
-
-    const onSelectChange = (newValue: SingleValue<SelectOptions> | MultiValue<SelectOptions>, actionMeta: ActionMeta<SelectOptions>) => {
-        settingChanged.current = true;
-        if (Array.isArray(newValue)) {
-            // Multi-select case
-            const values = newValue.map((val)=>val.value);
-            updateSetting( actionMeta.name as string, values);
-        } else if (newValue !== null && "value" in newValue) {
-            // Single-select case (ensures 'newValue' is an object with 'value')
-            updateSetting( actionMeta.name as string, newValue.value );
-        } else {
-            console.log("Selection cleared.");
         }
     };
 
@@ -397,12 +362,14 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
         optionKey?: string,
         index?: number
     ) => {
-        if (!key || !optionKey || index === undefined) return; // Ensure values are valid
+        if (!key || !optionKey || index === undefined) {
+            console.error("Missing required parameters in handleMultiNumberChange");
+            return;
+        }
 
         settingChanged.current = true;
 
-        const multipleOptions: Record<number, { key: string; value: string }> =
-            (setting[key] as Record<number, { key: string; value: string }>) || {};
+        const multipleOptions: Record<number, { key: string; value: string }> = setting[key] || {};
 
         multipleOptions[index] = {
             key: optionKey,
@@ -412,27 +379,29 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
         updateSetting(key, multipleOptions);
     };
 
-
     const handlMultiSelectDeselectChange = (
         key: string,
-        options: { value: string; proSetting?: boolean }[],
-        type: string = ""
+        options: { value: string; proSetting?: any }[],
+        type: string = ''
     ) => {
         settingChanged.current = true;
+
         if (Array.isArray(setting[key]) && setting[key].length > 0) {
-        updateSetting(key, []);
+            updateSetting(key, []);
         } else {
-        const values = options.map((val)=>val.value);
-        updateSetting(key, values);
+            const newValue: string[] = options
+                .filter((option) => type === 'multi-select' || !isProSetting(option.proSetting))
+                .map(({ value }) => value);
+
+            updateSetting(key, newValue);
         }
     };
 
-
-    const runUploader = (key: string) => {
+    const runUploader = (key: string): void => {
         settingChanged.current = true;
 
         // Create a new media frame
-        const frame = wp.media({
+        const frame: any = wp.media({
             title: "Select or Upload Media Of Your Chosen Persuasion",
             button: {
                 text: "Use this media",
@@ -440,15 +409,31 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
             multiple: false, // Set to true to allow multiple files to be selected
         });
 
-        frame.on("select", () => {
+        frame.on("select", function () {
             // Get media attachment details from the frame state
-            const attachment = frame.state().get("selection").first().toJSON() as { url: string };
+            const attachment = frame.state().get("selection").first().toJSON();
             updateSetting(key, attachment.url);
         });
 
         // Finally, open the modal on click
         frame.open();
     };
+
+     
+    const onSelectChange = (newValue: SingleValue<SelectOptions> | MultiValue<SelectOptions>, actionMeta: ActionMeta<SelectOptions>) => {
+        settingChanged.current = true;
+        if (Array.isArray(newValue)) {
+            // Multi-select case
+            const values = newValue.map((val) => val.value);
+            updateSetting(actionMeta.name as string, values);
+        } else if (newValue !== null && "value" in newValue) {
+            // Single-select case (ensures 'newValue' is an object with 'value')
+            updateSetting(actionMeta.name as string, newValue.value);
+        } else {
+            console.log("Selection cleared.");
+        }
+    };
+
 
     const isContain = (key: string, value: string | number | boolean | null = null): boolean => {
         const settingValue = setting[key];
@@ -484,7 +469,8 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
         }
         return true;
     };
-    const handleSubmit=(e:any)=>{
+
+    const handleSubmit = (e: any) => {
         console.log("hiii");
     }
 
@@ -586,11 +572,11 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
                             descClass="settings-metabox-description"
                             description={inputField.desc}
                             inputClass={`${inputField.key} form-input`}
-                            imageSrc={value !== undefined ? String(value) : appWindow.appLocalizer?.default_logo}
+                            imageSrc={value !== undefined ? String(value) : appLocalizer?.default_logo}
                             imageWidth={inputField.width} // for width
                             imageHeight={inputField.height} // for height
                             buttonClass="btn btn-purple"
-                            openUploader={appWindow.appLocalizer?.open_uploader} // for upload button text
+                            openUploader={appLocalizer?.open_uploader} // for upload button text
                             type="hidden"
                             key={inputField.key}
                             name={inputField.name}
@@ -968,7 +954,7 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
                 case "wpeditor":
                     input = (
                         <WpEditor
-                            apiKey={String(appWindow.appLocalizer?.mvx_tinymce_key || "")}
+                            apiKey={String(appLocalizer?.mvx_tinymce_key || "")}
                             value={String(value)}
                             onEditorChange={(e) => {
                                 if (!proSettingChanged(inputField.proSetting ?? false) && !moduleEnabledChanged(String(inputField.moduleEnabled))) {
@@ -1065,7 +1051,7 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
                     input = (
                         <CatalogCustomizer
                             setting={setting}
-                            proSetting={appWindow.appLocalizer?.khali_dabba ?? false}
+                            proSetting={appLocalizer?.khali_dabba ?? false}
                             onChange={(key, value) => {
                                 settingChanged.current = true;
                                 updateSetting(key, value);
@@ -1203,7 +1189,7 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
                             }
                         }}
                     />
-                    
+
                     break;
                 // For mailchimp list
                 case "api-connect":
@@ -1216,7 +1202,7 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
                             optionKey={String(inputField.optionKey)}
                             onChange={handleChange}
                             proSettingChanged={
-                                () => proSettingChanged(inputField.proSetting??false)
+                                () => proSettingChanged(inputField.proSetting ?? false)
                             }
                             settingChanged={settingChanged}
                             apiLink={String(inputField.apiLink)} // fetch api
@@ -1228,80 +1214,81 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
 
             return inputField.type === "section" || inputField.label === "no_label" ? (
                 input
-              ) : (
+            ) : (
                 <div key={"g" + inputField.key} className={`form-group ${inputField.classes ? inputField.classes : ''}`}>
-                  {inputField.type !== "catalog-customizer" && inputField.type !== "from-builder" && inputField.type !== "form-customizer" && (
-                    <label
-                      className="settings-form-label"
-                      key={"l" + inputField.key}
-                      htmlFor={inputField.key}
-                    >
-                      <p>{inputField.label}</p>
-                    </label>
-                  )}
-                  
-                  <div className="settings-input-content">{input}</div>
+                    {inputField.type !== "catalog-customizer" && inputField.type !== "from-builder" && inputField.type !== "form-customizer" && (
+                        <label
+                            className="settings-form-label"
+                            key={"l" + inputField.key}
+                            htmlFor={inputField.key}
+                        >
+                            <p>{inputField.label}</p>
+                        </label>
+                    )}
+
+                    <div className="settings-input-content">{input}</div>
                 </div>
-              );
+            );
         });
     };
 
     const handleModelClose = () => {
         setModelOpen(false);
-      };
-    
-      const handleModulePopupClose = () => {
-        setModelModuleOpen(false);
-      };
-    
+    };
 
-      return (
+    const handleModulePopupClose = () => {
+        setModelModuleOpen(false);
+    };
+
+
+    return (
         <>
-          <div className="dynamic-fields-wrapper">
-            <Dialog
-              className="admin-module-popup"
-              open={modelOpen}
-              onClose={handleModelClose}
-              aria-labelledby="form-dialog-title"
-            >
-              <span
-                className="admin-font adminLib-cross"
-                onClick={handleModelClose}
-              ></span>
-              <ProPopup />
-            </Dialog>
-            <Dialog
-              className="admin-module-popup"
-              open={modelModuleOpen}
-              onClose={handleModulePopupClose}
-              aria-labelledby="form-dialog-title"
-            >
-              <span
-                className="admin-font adminLib-cross"
-                onClick={handleModulePopupClose}
-              ></span>
-                <ModulePopup 
-                  name={String(modulePopupData.name)} 
-                  settings={modulePopupData.settings} 
-                  plugin={modulePopupData.plugin} 
-                />
-            </Dialog>
-            {successMsg && (
-              <div className="admin-notice-display-title">
-                <i className="admin-font adminLib-icon-yes"></i>
-                {successMsg}
-              </div>
-            )}
-            <form
-              className="dynamic-form"
-              onSubmit={(e) => {
-                handleSubmit(e);
-              }}
-            >
-              {renderForm()}
-            </form>
-          </div>
+            <div className="dynamic-fields-wrapper">
+                <Dialog
+                    className="admin-module-popup"
+                    open={modelOpen}
+                    onClose={handleModelClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <span
+                        className="admin-font adminLib-cross"
+                        onClick={handleModelClose}
+                    ></span>
+                    <ProPopup />
+                </Dialog>
+                <Dialog
+                    className="admin-module-popup"
+                    open={modelModuleOpen}
+                    onClose={handleModulePopupClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <span
+                        className="admin-font adminLib-cross"
+                        onClick={handleModulePopupClose}
+                    ></span>
+                    <ModulePopup
+                        name={String(modulePopupData.name)}
+                        settings={modulePopupData.settings}
+                        plugin={modulePopupData.plugin}
+                    />
+                </Dialog>
+                {successMsg && (
+                    <div className="admin-notice-display-title">
+                        <i className="admin-font adminLib-icon-yes"></i>
+                        {successMsg}
+                    </div>
+                )}
+                <form
+                    className="dynamic-form"
+                    onSubmit={(e) => {
+                        handleSubmit(e);
+                    }}
+                >
+                    {renderForm()}
+                </form>
+            </div>
         </>
-      );};
+    );
+};
 
 export default AdminForm;

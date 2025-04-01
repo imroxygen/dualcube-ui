@@ -45,7 +45,7 @@ export { default as Recaptcha } from "./components/Recaptcha/Recaptcha";
 export { default as RegistrationForm } from "./components/RegistrationForm/RegistrationForm";
 export { default as Section } from "./components/Section/Section";
 export { default as SelectInput } from "./components/SelectInput/SelectInput";
-export { default as Settings } from "./components/Settings/Settings";
+// export { default as Settings } from "./components/Settings/Settings";
 export { default as ShortCodeTable } from "./components/ShortCodeTable/ShortCodeTable";
 export { default as SimpleInput } from "./components/SimpleInput/SimpleInput";
 export { default as SubTabSection } from "./components/SubTabSection/SubTabSection";
