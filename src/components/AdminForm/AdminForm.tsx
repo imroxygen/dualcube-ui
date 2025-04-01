@@ -1070,6 +1070,8 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
                                 settingChanged.current = true;
                                 updateSetting(key, value);
                             }}
+                            Sample_Product="#"
+                            pro_url="#"
                         />
                     );
                     break;
