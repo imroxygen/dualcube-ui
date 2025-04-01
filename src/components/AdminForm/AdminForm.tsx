@@ -419,7 +419,7 @@ const AdminForm: React.FC<AdminFormProps> = ({ setting, updateSetting, modules, 
         frame.open();
     };
 
-     
+
     const onSelectChange = (newValue: SingleValue<SelectOptions> | MultiValue<SelectOptions>, actionMeta: ActionMeta<SelectOptions>) => {
         settingChanged.current = true;
         if (Array.isArray(newValue)) {
@@ -1122,6 +1122,7 @@ const AdminForm: React.FC<AdminFormProps> = ({ setting, updateSetting, modules, 
                 // Synchronize button (Changes later)
                 case "syncbutton":
                     input = <SyncNow
+                        appLocalizer={appLocalizer}
                         buttonKey={inputField.key}
                         apilink={String(inputField.apilink)} // apilink 
                         value={String(inputField.value)}
@@ -1164,13 +1165,13 @@ const AdminForm: React.FC<AdminFormProps> = ({ setting, updateSetting, modules, 
                 // Test connection button
                 case "testconnection":
                     input = <ConnectButton
+                        appLocalizer={appLocalizer}
                         apiLink={String(inputField.apiLink)} // apilink 
                         tasks={inputField.tasks ?? []} /> // all tasks for test connection
                     break;
                 case "log":
                     input = <Log
-                        tab_name=""
-                        nonce=""
+                        appLocalizer={appLocalizer}
                         fetchApiLink={String(inputField.fetchApiLink)} // api to fetch the log content
                         downloadApiLink={String(inputField.downloadApiLink)} // download the log file
                         downloadFileName={String(inputField.fileName)} /> // log file name
@@ -1195,6 +1196,7 @@ const AdminForm: React.FC<AdminFormProps> = ({ setting, updateSetting, modules, 
                 case "api-connect":
                     input = (
                         <InputMailchimpList
+                            appLocalizer={appLocalizer}
                             setting={setting}
                             updateSetting={updateSetting}
                             mailchimpKey={inputField.key}

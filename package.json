@@ -5,11 +5,10 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "src"
-  ],
   "style": "dist/index.css",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "wireit",
     "dev": "wireit",

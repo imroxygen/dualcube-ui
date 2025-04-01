@@ -28,7 +28,7 @@ export const getApiResponse = async <T>(url: string, headers: AxiosRequestConfig
 export const sendApiResponse = async <T>(
     appLocalizer: Record<string, any>,
     url: string,
-    data: unknown,
+    data: any,
     headers: AxiosRequestConfig = {}
 ): Promise<T | null> => {
     try {

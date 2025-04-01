@@ -18,9 +18,10 @@ export interface  SyncNowProps{
   description: string;
   apilink: string;
   statusApiLink: string;
+  appLocalizer: Record<string, any>; // Allows any structure
 };
 
-const SyncNow: React.FC<SyncNowProps> = ({ interval, proSetting, proSettingChanged, value, description, apilink, statusApiLink }) => {
+const SyncNow: React.FC<SyncNowProps> = ({ appLocalizer,interval, proSetting, proSettingChanged, value, description, apilink, statusApiLink }) => {
   const [syncStarted, setSyncStarted] = useState<boolean>(false);
   const [syncStatus, setSyncStatus] = useState<SyncStatus[]>([]);
   const [buttonClicked, setButtonClicked] = useState<boolean>(false);
@@ -43,7 +44,7 @@ const SyncNow: React.FC<SyncNowProps> = ({ interval, proSetting, proSettingChang
   const fetchSyncStatus = () => {
     axios({
       method: "post",
-      url: getApiLink(statusApiLink),
+      url: getApiLink(appLocalizer,statusApiLink),
       headers: { "X-WP-Nonce": (window as any).appLocalizer.nonce },
     }).then((response) => {
       const syncData = response.data;
@@ -61,7 +62,7 @@ const SyncNow: React.FC<SyncNowProps> = ({ interval, proSetting, proSettingChang
 
     axios({
       method: "post",
-      url: getApiLink(apilink),
+      url: getApiLink(appLocalizer,apilink),
       headers: { "X-WP-Nonce": (window as any).appLocalizer.nonce },
     }).then((response) => {
       if (response.data) {

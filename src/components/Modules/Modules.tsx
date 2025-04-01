@@ -24,12 +24,14 @@ interface ModuleProps {
   insertModule?: (moduleId: string) => void;
   removeModule?: (moduleId: string) => void;
   modulesArray?: Module[];
+  appLocalizer: Record<string, any>; // Allows any structure
 }
 
 const Modules: React.FC<ModuleProps> = ({
   insertModule = () => {},
   removeModule = () => {},
   modulesArray = [],
+  appLocalizer
 }) => {
   const [modelOpen, setModelOpen] = useState<boolean>(false);
   const [successMsg, setSuccessMsg] = useState<string>("");
@@ -55,7 +57,7 @@ const Modules: React.FC<ModuleProps> = ({
       removeModule?.(moduleId);
     }
 
-    await sendApiResponse(getApiLink("modules"), { id: moduleId, action });
+    await sendApiResponse(appLocalizer,getApiLink(appLocalizer,"modules"), { id: moduleId, action });
     setSuccessMsg("Module activated");
     setTimeout(() => setSuccessMsg(""), 2000);
   };

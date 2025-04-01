@@ -22,9 +22,10 @@ interface InputMailchimpListProps {
   value?: string;
   setting: Record<string,any>;
   updateSetting: any;
+  appLocalizer: Record<string, any>; // Allows any structure
 }
 
-const InputMailchimpList: React.FC<InputMailchimpListProps> = ({ setting,updateSetting,mailchimpKey, optionKey, settingChanged, apiLink, proSettingChanged, onChange, selectKey, value }) => {
+const InputMailchimpList: React.FC<InputMailchimpListProps> = ({ appLocalizer,setting,updateSetting,mailchimpKey, optionKey, settingChanged, apiLink, proSettingChanged, onChange, selectKey, value }) => {
   // State variables
   // const { setting, updateSetting } = useSetting();
 
@@ -41,7 +42,7 @@ const InputMailchimpList: React.FC<InputMailchimpListProps> = ({ setting,updateS
       setMailchimpErrorMessage("");
 
       try {
-        const options: SelectOption[] = (await getApiResponse(getApiLink(apiLink))) ?? []; // ✅ Ensure it's always an array
+        const options: SelectOption[] = (await getApiResponse(getApiLink(appLocalizer,apiLink))) ?? []; // ✅ Ensure it's always an array
         settingChanged.current = true;
         updateSetting(optionKey, options);
         setSelectOption(options);

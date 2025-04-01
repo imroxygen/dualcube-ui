@@ -13,9 +13,10 @@ interface Task {
 export interface ConnectButtonProps {
     apiLink: string;
     tasks: Task[];
+    appLocalizer: Record<string, any>; // Allows any structure
 }
 
-const ConnectButton: React.FC<ConnectButtonProps> = ({ apiLink, tasks }) => {
+const ConnectButton: React.FC<ConnectButtonProps> = ({ appLocalizer ,apiLink, tasks }) => {
     const connectTaskStarted = useRef<boolean>(false);
     const additionalData = useRef<Record<string, any>>({});
     const taskNumber = useRef<number>(0);
@@ -56,7 +57,7 @@ const ConnectButton: React.FC<ConnectButtonProps> = ({ apiLink, tasks }) => {
 
         await sleep(2500);
 
-        const response = await sendApiResponse(getApiLink(apiLink), {
+        const response = await sendApiResponse(appLocalizer,getApiLink(appLocalizer,apiLink), {
             action: currentTask.action,
             ...additionalData.current,
         });
