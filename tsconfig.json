@@ -10,12 +10,12 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "strict": true,                        /* Skip type checking all .d.ts files. */
+    "strict": true,                  
     "lib": ["es6", "dom", "esnext"],
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
-    "allowSyntheticDefaultImports": true,                  /* Skip type checking all .d.ts files. */
+    "allowSyntheticDefaultImports": true,                  
     "types": ["vite/client","node"]
   },
   "include": ["src","src/types"],
