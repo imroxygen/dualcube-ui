@@ -67,8 +67,8 @@
     "wireit": "^0.14.11"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-dom": "*"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "peerDependenciesMeta": {
     "react": {
@@ -83,8 +83,8 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mapbox/mapbox-gl-geocoder": "^5.0.3",
-    "@mui/icons-material": "^7.0.0",
-    "@mui/material": "^7.0.0",
+    "@mui/icons-material": "^7.0.1",
+    "@mui/material": "^7.0.1",
     "@reactour/tour": "^3.7.0",
     "@tanstack/react-table": "^8.21.2",
     "@tinymce/tinymce-react": "^6.0.0",
