@@ -1,9 +1,7 @@
-import React,{ useState } from "react";
+import React, { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import Popoup from "../PopupContent/Propopup";
 import "./modules.scss";
-import { getModuleData } from "../Service/templateService";
-import { useModules } from "../Context/ModuleContext";
 import { getApiLink, sendApiResponse } from "../Service/apiService";
 
 interface Module {
@@ -22,20 +20,23 @@ interface AppLocalizer {
 
 declare const appLocalizer: AppLocalizer;
 
-interface moduleProps{
-  filePath:string,
+interface ModuleProps {
+  insertModule?: (moduleId: string) => void;
+  removeModule?: (moduleId: string) => void;
+  modulesArray?: Module[];
 }
 
-const Modules : React.FC<moduleProps> = async () => {
-  const { modules, insertModule, removeModule } = useModules();
-  const modulesArray: Module[] = await getModuleData(); //needs path of file
+const Modules: React.FC<ModuleProps> = ({
+  insertModule = () => {},
+  removeModule = () => {},
+  modulesArray = [],
+}) => {
   const [modelOpen, setModelOpen] = useState<boolean>(false);
   const [successMsg, setSuccessMsg] = useState<string>("");
 
   const isModuleAvailable = (moduleId: string): boolean => {
     const module = modulesArray.find((module) => module.id === moduleId);
-    if (!module?.pro_module) return true;
-    return module.pro_module && appLocalizer.khali_dabba ? true : false;
+    return module?.pro_module ? appLocalizer.khali_dabba ?? false : true;
   };
 
   const handleOnChange = async (
@@ -48,7 +49,11 @@ const Modules : React.FC<moduleProps> = async () => {
     }
 
     const action = event.target.checked ? "activate" : "deactivate";
-    action === "activate" ? insertModule(moduleId) : removeModule(moduleId);
+    if (action === "activate") {
+      insertModule?.(moduleId);
+    } else {
+      removeModule?.(moduleId);
+    }
 
     await sendApiResponse(getApiLink("modules"), { id: moduleId, action });
     setSuccessMsg("Module activated");
@@ -57,16 +62,8 @@ const Modules : React.FC<moduleProps> = async () => {
 
   return (
     <div className="module-container">
-      <Dialog
-        className="admin-module-popup"
-        open={modelOpen}
-        onClose={() => setModelOpen(false)}
-        aria-labelledby="form-dialog-title"
-      >
-        <span
-          className="admin-font adminLib-cross"
-          onClick={() => setModelOpen(false)}
-        ></span>
+      <Dialog className="admin-module-popup" open={modelOpen} onClose={() => setModelOpen(false)}>
+        <span className="admin-font adminLib-cross" onClick={() => setModelOpen(false)}></span>
         <Popoup />
       </Dialog>
 
@@ -83,13 +80,10 @@ const Modules : React.FC<moduleProps> = async () => {
       <div className="module-option-row">
         {modulesArray.map((module) => (
           <div className="module-list-item" key={module.id}>
-            {module.pro_module && !appLocalizer.khali_dabba && (
-              <span className="admin-pro-tag">Pro</span>
-            )}
+            {module.pro_module && !appLocalizer.khali_dabba && <span className="admin-pro-tag">Pro</span>}
             <div className="module-icon">
               <i className={`font ${module.icon}`}></i>
             </div>
-
             <div className="card-meta">
               <div className="meta-name">{module.name}</div>
               <p className="meta-description" dangerouslySetInnerHTML={{ __html: module.desc }}></p>

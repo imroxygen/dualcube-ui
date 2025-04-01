@@ -1181,6 +1181,8 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
                     break;
                 case "log":
                     input = <Log
+                        tab_name=""
+                        nonce=""
                         fetchApiLink={String(inputField.fetchApiLink)} // api to fetch the log content
                         downloadApiLink={String(inputField.downloadApiLink)} // download the log file
                         downloadFileName={String(inputField.fileName)} /> // log file name
@@ -1199,11 +1201,14 @@ const AdminForm: React.FC<AdminFormProps> = ({ settings, vendorId, announcementI
                             }
                         }}
                     />
+                    
                     break;
                 // For mailchimp list
                 case "api-connect":
                     input = (
                         <InputMailchimpList
+                            setting={setting}
+                            updateSetting={updateSetting}
                             mailchimpKey={inputField.key}
                             selectKey={String(inputField.selectKey)}
                             optionKey={String(inputField.optionKey)}

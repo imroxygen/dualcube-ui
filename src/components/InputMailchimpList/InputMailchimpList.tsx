@@ -20,11 +20,14 @@ interface InputMailchimpListProps {
   onChange: (event: { target: { value: string } }, key: string) => void;
   selectKey: string;
   value?: string;
+  setting: Record<string,any>;
+  updateSetting: any;
 }
 
-const InputMailchimpList: React.FC<InputMailchimpListProps> = ({ mailchimpKey, optionKey, settingChanged, apiLink, proSettingChanged, onChange, selectKey, value }) => {
+const InputMailchimpList: React.FC<InputMailchimpListProps> = ({ setting,updateSetting,mailchimpKey, optionKey, settingChanged, apiLink, proSettingChanged, onChange, selectKey, value }) => {
   // State variables
-  const { setting, updateSetting } = useSetting();
+  // const { setting, updateSetting } = useSetting();
+
   const [selectOption, setSelectOption] = useState<SelectOption[]>(setting[optionKey] || []);
   const [loading, setLoading] = useState<boolean>(false);
   const [showOption, setShowOption] = useState<boolean>(false);

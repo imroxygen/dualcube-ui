@@ -12,6 +12,7 @@ export { default as Card } from "./components/Card/Card";
 export { default as CatalogCustomizer } from "./components/CatalogCustomizer/CatalogCustomizer";
 export { default as CheckboxCustomImg } from "./components/CheckboxCustomImg/CheckboxCustomImg";
 export { default as CustomTable } from "./components/CustomTable/CustomTable";
+export { default as ConnectButton } from "./components/ConnectButton/ConnectButton";
 export { default as Datepicker } from "./components/DatePicker/DatePicker";
 export { default as DefaultMeta } from "./components/DefaultMeta/DefaultMeta";
 export { default as DisplayButton } from "./components/DisplayButton/DisplayButton";
@@ -51,6 +52,7 @@ export { default as SubTabSection } from "./components/SubTabSection/SubTabSecti
 export { default as Support } from "./components/Support/Support";
 export { default as SyncMap } from "./components/SyncMap/SyncMap";
 export { default as SyncNow } from "./components/SyncNow/SyncNow";
+export { default as Tabs } from "./components/Tabs/Tabs";
 export { default as TableComponent } from "./components/TableComponent/TableComponent";
 export { default as TemplateSection } from "./components/TemplateSection/TemplateSection";
 export { default as TemplateTextArea } from "./components/TemplateTextArea/TemplateTextArea";
