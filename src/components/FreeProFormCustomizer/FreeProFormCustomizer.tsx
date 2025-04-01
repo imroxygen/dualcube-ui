@@ -100,6 +100,7 @@ const FreeProFormCustomizer: React.FC<FreeProFormCustomizerProps> = ({ setting, 
             <SubTabSection menuitem={menu} currentTab={currentTab} setCurrentTab={setCurrentTab} />
             {currentTab.id === "1" ? (
                 <ProForm
+                    setting={setting}
                     name="formsettings"
                     proSettingChange={proSettingChange}
                     onChange={(value) => onChange('formsettings', value)}

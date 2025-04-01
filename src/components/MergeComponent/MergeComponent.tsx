@@ -57,7 +57,7 @@ const MergeComponent: React.FC<MergeComponentProps> = ({
 
           if (type === "select") {
             return (
-              <select key={name} id={name} value={data[name]} onChange={(e) => handleOnChange(name, e.target.value)}>
+              <select key={name} id={name} value={data[name]} onChange={(e) =>handleOnChange(name, e.target.value)}>
                 <option value="">Select</option>
                 {options.map((option) => (
                   <option key={option.value} value={option.value}>

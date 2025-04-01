@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { __ } from "@wordpress/i18n";
-import { useSetting } from "../Context/SettingContext";
 import { ReactSortable } from "react-sortablejs";
 import ButtonCustomizer from "../ButtonCustomiser/ButtonCustomiser";
 import Elements from "../Elements/Elements";
@@ -132,18 +131,15 @@ interface CustomFormProps {
     name: string;
     proSettingChange: () => boolean;
     formTitlePlaceholder?: string;
-
+    setting:Record<string,any>;
 }
 // props value 
 // 1. formTitlePlaceholder
 // 2. formTitleDescription
 // 3. formFieldTypes
 
-const CustomFrom: React.FC<CustomFormProps> = (props) => {
-    const { onChange, name, proSettingChange } = props;
+const CustomFrom: React.FC<CustomFormProps> = ({ onChange, name, proSettingChange, setting, formTitlePlaceholder }) => {
     ////////////// Define state variable here /////////////////
-
-    const { setting } = useSetting();
     const formSetting = setting[ name ] || {};
     
     const settingHasChanged = useRef(false);
@@ -348,7 +344,7 @@ const CustomFrom: React.FC<CustomFormProps> = (props) => {
                     <div className="form-heading">
                         <input
                             type="text"
-                            placeholder={props.formTitlePlaceholder}
+                            placeholder={formTitlePlaceholder}
                             value={formFieldList[0]?.label}
                             onChange={(event) => { handleFormFieldChange(0, 'label', event.target.value) }}
                         />
@@ -534,6 +530,7 @@ const CustomFrom: React.FC<CustomFormProps> = (props) => {
                 </section>
 
                 <AddNewBtn
+                    large={true}
                     onAddNew={() => {
                         const newInput = appendNewFormField(formFieldList.length - 1);
                         setOpendInput(newInput);
