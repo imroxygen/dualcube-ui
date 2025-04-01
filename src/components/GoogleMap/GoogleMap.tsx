@@ -1,3 +1,5 @@
+/// <reference types="google.maps" />
+
 import React, { useEffect, useState, useRef } from "react";
 import GoogleMapReact from "google-map-react";
 

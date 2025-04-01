@@ -16,6 +16,7 @@
     "noImplicitThis": true,
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,                  /* Skip type checking all .d.ts files. */
+    "types": ["vite/client","node"]
   },
   "include": ["src","src/types"],
   "exclude": ["node_modules", "dist"]

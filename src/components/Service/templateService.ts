@@ -1,65 +1,55 @@
 /**
  * Core static JSON service module.
  */
-/// <reference types="webpack-env" />
 
-// Declare require.context for TypeScript
-declare const require: {
-    context: (directory: string, useSubdirectories: boolean, regExp: RegExp) => __WebpackModuleApi.RequireContext;
+/**
+ * Get Setting JSON data as object.
+ * @return {Array} Array of Object.
+ */
+const getTemplateData = async () => {
+    // Ensure import.meta.glob is correctly typed
+    const modules: Record<string, () => Promise<any>> = import.meta.glob('/src/template/settings/**/*.js');
+    return await importAll(modules);
 };
 
-/** 
- * Structure for a folder or file.
- */
-interface Folder {
-    name: string;
-    type: 'folder';
-    content: FileStructure[];
-}
-
-interface File {
-    name: string;
-    type: 'file';
-    content: any;
-}
-
-type FileStructure = Folder | File;
-
-/** 
- * Get Setting JSON data as object.
- */
-const getTemplateData = (): FileStructure[] => {
-    const context = require.context('../template/settings', true, /\.js$/);
-
-    function importAll(context: __WebpackModuleApi.RequireContext): FileStructure[] {
-        const folderStructure: FileStructure[] = [];
-
-        context.keys().forEach((key: string) => {
-            const path = key.substring(2); // Remove './' from the beginning of the path
-            const parts = path.split('/');
-            const fileName = parts.pop() || '';
-            let currentFolder = folderStructure;
-
-            parts.forEach(folder => {
-                let folderObject = currentFolder.find(item => item.name === folder && item.type === 'folder') as Folder;
-                if (!folderObject) {
-                    folderObject = { name: folder, type: 'folder', content: [] };
-                    currentFolder.push(folderObject);
-                }
-                currentFolder = folderObject.content;
-            });
-
-            currentFolder.push({ name: fileName.replace('.js', ''), type: 'file', content: context(key).default });
+async function importAll(modules: Record<string, () => Promise<any>>): Promise<any[]> {
+    const folderStructure: any[] = [];
+    
+    for (const path of Object.keys(modules)) {
+        const parts = path.replace('/src/template/settings/', '').split('/');
+        const fileName = parts.pop() || '';
+        let currentFolder = folderStructure;
+        
+        parts.forEach(folder => {
+            let folderObject = currentFolder.find(item => item.name === folder && item.type === 'folder');
+            if (!folderObject) {
+                folderObject = { name: folder, type: 'folder', content: [] };
+                currentFolder.push(folderObject);
+            }
+            currentFolder = folderObject.content;
         });
 
-        return folderStructure;
+        const module = await modules[path]();
+        currentFolder.push({ name: fileName.replace('.js', ''), type: 'file', content: module.default });
     }
 
-    return importAll(context);
-};
+    return folderStructure;
+}
 
-const getModuleData = async (filepath: string): Promise<any> => {
-    return await import(/* @vite-ignore */ filepath);
+const getModuleData = async (): Promise<any> => {
+    const modules = import.meta.glob('/src/template/modules/index.js', { eager: false });
+
+    const paths = Object.keys(modules);
+    if (paths.length === 0) {
+        throw new Error("Module not found: /src/template/modules/index.js");
+    }
+
+    const moduleImport:any = await modules[paths[0]](); // Await the module import
+    if (typeof moduleImport === "function") {
+        return (await moduleImport()).default; // If it's wrapped in a function, resolve it
+    }
+
+    return moduleImport.default;
 };
 
 export { getTemplateData, getModuleData };

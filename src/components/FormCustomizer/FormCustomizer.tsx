@@ -7,17 +7,19 @@ import './FormCustomizer.scss';
 interface FormCustomizerProps {
     value?: string;
     buttonText?: string;
+    setting:Record<string,any>;
     proSetting?: any;
     onChange: (key: string, value: any, isRestoreDefaults?: boolean) => void;
 }
 
-const FormCustomizer: React.FC<FormCustomizerProps> = ({ buttonText = 'Submit', proSetting, onChange }) => {
+const FormCustomizer: React.FC<FormCustomizerProps> = ({ buttonText = 'Submit', setting, proSetting, onChange }) => {
     const [currentHoverOn, setCurrentHoverOn] = useState<string>('');
     const [currentEditSection, setCurrentEditSection] = useState<string>('');
     const inputRef = useRef<HTMLInputElement | null>(null);
     const buttonRef = useRef<HTMLDivElement | null>(null);
 
-    const { setting } = useSetting();
+    // const { setting } = useSetting();
+    console.log("Settings from ui : ",setting);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -42,7 +44,7 @@ const FormCustomizer: React.FC<FormCustomizerProps> = ({ buttonText = 'Submit', 
                         className={currentHoverOn === 'description' ? 'active' : ''}
                         onClick={() => setCurrentHoverOn('description')}
                         onChange={(e) => onChange('alert_text', e.target.value)}
-                        value={setting.alert_text || ''}
+                        value={setting?.alert_text || ''}
                     />
                 </div>
                 <div className="form-section">
@@ -52,7 +54,7 @@ const FormCustomizer: React.FC<FormCustomizerProps> = ({ buttonText = 'Submit', 
                             onClick={() => setCurrentHoverOn('email_input')}
                             className={currentHoverOn === 'email_input' ? 'active' : ''}
                             type="email"
-                            placeholder={setting.email_placeholder_text || ''}
+                            placeholder={setting?.email_placeholder_text || ''}
                         />
 
                         {currentHoverOn === 'email_input' && (
@@ -81,7 +83,7 @@ const FormCustomizer: React.FC<FormCustomizerProps> = ({ buttonText = 'Submit', 
                                     <div className="property-section">
                                         <input
                                             type="text"
-                                            value={setting.email_placeholder_text || ''}
+                                            value={setting?.email_placeholder_text || ''}
                                             onChange={(e) => onChange('email_placeholder_text', e.target.value)}
                                         />
                                     </div>
@@ -93,9 +95,9 @@ const FormCustomizer: React.FC<FormCustomizerProps> = ({ buttonText = 'Submit', 
                         <ButtonCustomizer
                             text={buttonText}
                             proSetting={proSetting}
-                            setting={setting['customize_btn']}
+                            setting={setting?.customize_btn}
                             onChange={(key, value, isRestoreDefaults = false) => {
-                                const previousSetting = setting['customize_btn'] || {};
+                                const previousSetting = setting?.customize_btn || {};
                                 if (isRestoreDefaults) {
                                     onChange('customize_btn', value);
                                 } else {
