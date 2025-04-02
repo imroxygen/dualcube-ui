@@ -9,7 +9,7 @@ interface Products{
     pro_url : string,
 }
 interface BannerProps {
-    is_pro: boolean;
+    is_pro?: boolean;
     products ?: Products[];
 }
 
