@@ -5,6 +5,7 @@ const postcss = require("rollup-plugin-postcss");
 const sass = require("sass");
 const peerDepsExternal = require("rollup-plugin-peer-deps-external");
 const json = require("@rollup/plugin-json");
+const terser = require("@rollup/plugin-terser");
 
 module.exports = {
   input: "src/index.ts",
@@ -12,12 +13,13 @@ module.exports = {
     {
       file: "dist/index.js",
       format: "esm",
-      sourcemap: true,
+      sourcemap: false,
       generatedCode: {
         preserveThis: true,
       },
     },
   ],
+  treeshake: true,
   context: "this",
   external: [
     "react", 
@@ -45,6 +47,7 @@ module.exports = {
       extensions: [".scss", ".sass", ".css"],
       implementation: sass,
     }),
+    terser(),
   ],
   onwarn(warning, warn) {
     if (warning.code === "MODULE_LEVEL_DIRECTIVE") {
